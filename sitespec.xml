@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!-- Specifies the layout of job listings on various british websites -->
+<sitespec>
+  <jobsite name="Fish4Jobs" 
+           url="http://www.fish4.co.uk/searchjobs/?countrycode=GB&#38;Page=1" 
+	   xpath="//li[@class='lister__item cf']">
+    <field type="url" xpath=".//a[@itemprop='mainEntityOfPage']/@href" />
+    <field type="title" xpath=".//a[@itemprop='title']/text()" />
+    <field type="location" xpath=".//p[@class='lister__meta small']/span[1]/text()" />
+    <field type="salary" xpath=".//p[@class='lister__meta small']/span[2]/text()" />
+    <field type="employer" xpath=".//p[@class='lister__meta small']/span[3]/text()" />
+    <field type="description" xpath=".//p[@itemscope='description']/text()" />
+    <field type="datePosted" xpath=".//li[@class='job-actions__action pipe']/text()" />
+    <nextlink xpath="//a[@rel='next']/@href" />
+  </jobsite>
+
+  <jobsite name="Monster"
+	   url="http://www.monster.co.uk/jobs/search/?page=1&#38;sort=dt.rv.di"
+	   xpath="//script[@type='application/ld+json' and contains(text(), 'JobPosting')]/text()">
+    <field type="url" json="obj['url'][:obj['url'].find('?')]" />
+    <field type="title" json="obj['title']" />
+    <field type="location" json="', '.join(obj['jobLocation']['address'].values()[:3]).strip(', ')" />
+    <field type="description" json="obj['description']" />
+    <field type="employer" json="obj['hiringOrganization']['name']" />
+    <field type="datePosted" json="obj['datePosted']" />
+    <nextlink xpath="//link[@rel='next']/@href" />
+  </jobsite>    
+
+  <jobsite name="Reed"
+	   url="http://www.reed.co.uk/jobs?sortby=DisplayDate&#38;pageno=1&#38;pagesize=100"
+	   xpath="//article[@itemtype='http://schema.org/JobPosting' and @id != 'jobSection']">
+    <field type="url" xpath="substring-before(.//a[@itemprop='title']/@href, '#')" />
+    <field type="title" xpath=".//a[@itemprop='title']/@title" />
+    <field type="location" xpath="./div/div/ul[1]/li[1]/text()" />
+    <field type="salary" xpath="./div/div/ul[2]/li[1]/text()" />
+    <field type="employer" xpath="./div/header/div/a/text()" />
+    <field type="description" xpath=".//div[@itemprop='description']/text()" />
+    <field type="datePosted" xpath="./div/header/div/text()" />
+    <nextlink xpath="//a[span/span/@class='next']/@href" />
+  </jobsite>
+  <jobsite name="GRB"
+	   url="http://www.grb.uk.com/graduate-jobs/0"
+	   xpath="//tr[position() > 1]">
+    <field type="url" prefix="http://www.grb.uk.com" xpath="./td/a/@href" />
+    <field type="title" xpath="./td/a/text()" />
+    <field type="location" xpath="./td[3]/text()" />
+    <field type="datePosted" xpath="./td[2]//text()" />
+    <nextlink xpath="//div[@class='pageNum-next']/a/@href" />
+  </jobsite>
+  <jobsite name="Indeed"
+	   url="http://www.indeed.co.uk/jobs?q=''&#38;sort=date&#38;start=1"
+	   xpath="//div[@itemtype='http://schema.org/JobPosting']">
+    <field type="url" prefix="http://www.indeed.co.uk" xpath="./h2/a/@href" />
+    <field type="title" xpath="./h2/a/text()" />
+    <field type="location" xpath="./span/span/span/text()" />
+    <field type="employer" xpath=".//span[@itemprop='hiringOrganization']/span/text()" />
+    <field type="description" xpath=".//span[@class='summary']/text()" />
+    <field type="datePosted" xpath=".//span[@class='date']/text()" />
+    <nextlink xpath="//a[starts-with(./span/span/text(), 'Next')]/@href" />
+  </jobsite>
+  <jobsite name="Total"
+	   url="http://www.totaljobs.com/JobSearch/Results.aspx?PageNum=1"
+	   xpath=".//div[@typeof='JobPosting']">
+    <field type="url" xpath=".//meta[@property='url']/@content" />
+    <field type="title" xpath=".//meta[@property='title']/@content" />
+    <field type="location" xpath=".//span[@property='jobLocation']/text()" />
+    <field type="salary" xpath=".//li[@property='baseSalary']/text()" />
+    <field type="employer" xpath=".//li[@property='hiringOrganization']//meta[@property='name']/@content" />   
+    <field type="description" xpath=".//div[@property='experienceRequirements']/p/text()" />
+    <field type="datePosted" xpath=".//li[@class='date-posted']/span/text()" />
+    <nextlink xpath="//link[@rel='next']/@href" />
+  </jobsite>
+</sitespec>
+<!--  <jobsite name="Monster"
+	   url="http://www.access.monster.co.uk/SearchResults.aspx?cy=uk&#38;q=&#38;vw=d"
+	   xpath="//tr[@class='rowEven' or @class='rowOdd']">
+    <field type="url" xpath="substring-before(.//div[@class='cellDataJobTitle']//a/@href, '?')" />
+    <field type="title" xpath=".//div[@class='cellDataJobTitle']//a/text()" />
+    <field type="description" xpath="substring(.//p/text(), 0, string-length(.//p/text()) - 1)" />
+    <field type="location" xpath=".//div[@class='cellDataLocation']/text()" />
+    <field type="employer" xpath=".//div[@class='cellDataCompany']/text()" />
+    <field type="salary" xpath=".//table//tr[5]/td/text()" />
+    <field type="datePosted" xpath="concat('2016/', .//div[@class='cellDataDate']/text())" />
+    <nextlink xpath="//a[@class='MpagingLinkNext']/@href" />
+  </jobsite>
+  <jobsite name="Monster"
+	   url="http://www.monster.co.uk/jobs/search/?page=1&#38;sort=dt.rv.di"
+	   xpath="//article[@itemtype='https://schema.org/JobPosting']">
+    <field type="url" xpath="substring-before(.//div[@class='jobTitle']//a/@href, '?')" />
+    <field type="title" xpath=".//*[@itemprop='title']//text()" />
+    <field type="location" xpath=".//div[@itemtype='https://schema.org/Place']//span/text()" />
+    <field type="employer" xpath=".//div[@itemtype='https://schema.org/Organization']//span/text()" />
+    <field type="datePosted" xpath=".//time[@itemprop='datePosted']/@datetime" />
+    <nextlink xpath="//a[starts-with(./text(), 'Next')]/@href" />
+  </jobsite>
+  <jobsite name="Monster"
+	   url="http://jobsearch.monster.co.uk/search/?pg=1"
+	   xpath="//tr[@class='odd' or @class='even']">
+    <field type="url" xpath="substring-before(/tr/td/div/div/a/@href, '?')" />
+    <field type="title" xpath="/tr/td/div/div/a/@title" />
+    <field type="location" xpath="/tr/td/div/div/a/@title[2]" />
+    <field type="employer" xpath="/tr/td/div/div/a/@title[3]" />
+    <field type="datePosted" xpath="/tr/td/div/div/text()[7]" />
+  </jobsite>-->
